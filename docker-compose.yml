@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:14.4-alpine
+    container_name: postgres
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    env_file: .env
+    ports:
+      - 5432:5432
+    networks:
+      - ezgame_network
+
+  bot:
+    build:
+      context: .
+      dockerfile: ./docker/bot/Dockerfile
+    container_name: bot
+    env_file: .env
+    depends_on:
+      - postgres
+    networks:
+      - ezgame_network
+
+networks:
+  ezgame_network:
+    driver: bridge
+    name: ezgame_network
+
+volumes:
+  pg-data:
+
+
